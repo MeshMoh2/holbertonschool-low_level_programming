@@ -1,13 +1,17 @@
 #include <unistd.h>
 
 /**
- * main - Entry point
+ * main - Entry point of the program
  *
- * Description: This program prints a specific quote to standard error
- * without using printf or puts, and returns 1.
- * without using printf or puts.
+ * Description: This program prints the exact message:
+ * "and that piece of art is useful" - Dora Korpar, 2015-10-19",
+ * followed by a new line, to the standard error output.
  *
- * Return: Always 1 (Failure)
+ * - It does not use printf or puts.
+ * - It uses the write system call to output the string.
+ * - The program returns 1 as required by the project specifications.
+ *
+ * Return: Always 1 (indicating an error for testing purposes)
  */
 int main(void)
 {
