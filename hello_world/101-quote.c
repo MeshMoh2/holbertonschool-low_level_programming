@@ -3,7 +3,8 @@
 /**
  * main - Entry point
  *
- * Description: Prints the given quote to standard error
+ * Description: This program prints a specific quote to standard error
+ * without using printf or puts, and returns 1.
  * without using printf or puts.
  *
  * Return: Always 1 (Failure)
