@@ -75,4 +75,8 @@ int add(int a, int b);
 
 /**
  * print_to_98 - Prints all natural numbers from n to 98
- * @n:
+ * @n: Starting number
+ */
+void print_to_98(int n);
+
+#endif /* MAIN_H */
