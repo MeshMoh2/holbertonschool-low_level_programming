@@ -8,4 +8,9 @@
  */
 int _putchar(char c);
 
+/**
+ * print_alphabet - Prints the alphabet in lowercase
+ */
+void print_alphabet(void);
+
 #endif /* MAIN_H */
