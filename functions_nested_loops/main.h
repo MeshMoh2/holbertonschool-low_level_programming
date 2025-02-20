@@ -1,6 +1,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <stdio.h> /* Standard library is allowed */
+
 /**
  * _putchar - Writes a character to stdout
  * @c: The character to print
@@ -71,4 +73,6 @@ void times_table(void);
  */
 int add(int a, int b);
 
-#endif /* MAIN_H */
+/**
+ * print_to_98 - Prints all natural numbers from n to 98
+ * @n:
