@@ -4,15 +4,16 @@
  * _atoi - Converts a string to an integer.
  * @s: Pointer to the string.
  *
- * Description: This function extracts numbers from the string,
- * accounts for signs, and converts the valid digits into an integer.
- * If no numbers are found, it returns 0.
+ * Description: Extracts numbers from the string, accounts for signs,
+ * and converts the valid digits into an integer. If no numbers are found,
+ * returns 0. Handles the case where -2147483648 would cause overflow.
  *
  * Return: The integer value of the converted string.
  */
 int _atoi(char *s)
 {
-	int i = 0, sign = 1, num = 0, found_digit = 0;
+	unsigned int num = 0;
+	int sign = 1, i = 0;
 
 	while (s[i] != '\0')
 	{
@@ -22,13 +23,20 @@ int _atoi(char *s)
 		if (s[i] >= '0' && s[i] <= '9')
 		{
 			num = (num * 10) + (s[i] - '0');
-			found_digit = 1;
+
+			/* Prevent integer overflow */
+			if (num > 2147483648)
+				break;
 		}
-		else if (found_digit)
+		else if (num > 0)
 			break;
 
 		i++;
 	}
+
+	/* Handle case of -2147483648 correctly */
+	if (num == 2147483648 && sign == -1)
+		return (-2147483648);
 
 	return (num * sign);
 }
