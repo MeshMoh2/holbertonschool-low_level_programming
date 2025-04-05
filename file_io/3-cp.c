@@ -7,10 +7,10 @@
 #define BUFFER_SIZE 1024
 
 /**
- * print_error - Prints an error message to stderr and exits with given code
- * @exit_code: The code to exit with
- * @format: The format string (with %s or %d)
- * @arg: The argument to include in the message
+ * print_error - Prints an error message to stderr and exits
+ * @exit_code: Exit status code
+ * @format: Format string for dprintf
+ * @arg: Argument to include in message
  */
 void print_error(int exit_code, const char *format, const char *arg)
 {
@@ -19,11 +19,11 @@ void print_error(int exit_code, const char *format, const char *arg)
 }
 
 /**
- * main - Copies the content of a file to another file.
- * @ac: The argument count.
- * @av: The argument vector (file_from and file_to).
+ * main - Copies content from one file to another
+ * @ac: Argument count
+ * @av: Argument vector
  *
- * Return: 0 on success, exits with specified codes on error.
+ * Return: 0 on success, exits with codes on error
  */
 int main(int ac, char **av)
 {
@@ -47,8 +47,20 @@ int main(int ac, char **av)
 		print_error(99, "Error: Can't write to %s\n", av[2]);
 	}
 
-	while ((r_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
+	while (1)
 	{
+		r_bytes = read(fd_from, buffer, BUFFER_SIZE);
+
+		if (r_bytes == -1)
+		{
+			close(fd_from);
+			close(fd_to);
+			print_error(98, "Error: Can't read from file %s\n", av[1]);
+		}
+
+		if (r_bytes == 0)
+			break;
+
 		w_bytes = write(fd_to, buffer, r_bytes);
 		if (w_bytes == -1 || w_bytes != r_bytes)
 		{
@@ -56,13 +68,6 @@ int main(int ac, char **av)
 			close(fd_to);
 			print_error(99, "Error: Can't write to %s\n", av[2]);
 		}
-	}
-
-	if (r_bytes == -1)
-	{
-		close(fd_from);
-		close(fd_to);
-		print_error(98, "Error: Can't read from file %s\n", av[1]);
 	}
 
 	if (close(fd_from) == -1)
