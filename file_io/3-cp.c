@@ -7,23 +7,23 @@
 #define BUFFER_SIZE 1024
 
 /**
- * print_error - Prints an error message to stderr and exits
- * @code: The exit code
- * @message: The format string
- * @arg: The argument to insert in format
+ * print_error - Prints error message and exits
+ * @code: Exit code
+ * @format: Error message format
+ * @arg: Error message argument
  */
-void print_error(int code, const char *message, const char *arg)
+void print_error(int code, const char *format, const char *arg)
 {
-	dprintf(STDERR_FILENO, message, arg);
+	dprintf(STDERR_FILENO, format, arg);
 	exit(code);
 }
 
 /**
- * main - Copies content of one file to another
+ * main - Copies the content of a file to another file
  * @ac: Argument count
  * @av: Argument vector
  *
- * Return: 0 on success, otherwise exits with appropriate code
+ * Return: 0 on success, exits with error code otherwise
  */
 int main(int ac, char **av)
 {
@@ -41,6 +41,14 @@ int main(int ac, char **av)
 	if (fd_from == -1)
 		print_error(98, "Error: Can't read from file %s\n", av[1]);
 
+	/* First read BEFORE opening file_to */
+	r_bytes = read(fd_from, buffer, BUFFER_SIZE);
+	if (r_bytes == -1)
+	{
+		close(fd_from);
+		print_error(98, "Error: Can't read from file %s\n", av[1]);
+	}
+
 	fd_to = open(av[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
 	if (fd_to == -1)
 	{
@@ -48,22 +56,22 @@ int main(int ac, char **av)
 		print_error(99, "Error: Can't write to %s\n", av[2]);
 	}
 
-	/* Read loop */
-	while ((r_bytes = read(fd_from, buffer, BUFFER_SIZE)) != 0)
+	while (r_bytes > 0)
 	{
-		if (r_bytes == -1)
-		{
-			close(fd_from);
-			close(fd_to);
-			print_error(98, "Error: Can't read from file %s\n", av[1]);
-		}
-
 		w_bytes = write(fd_to, buffer, r_bytes);
 		if (w_bytes == -1 || w_bytes != r_bytes)
 		{
 			close(fd_from);
 			close(fd_to);
 			print_error(99, "Error: Can't write to %s\n", av[2]);
+		}
+
+		r_bytes = read(fd_from, buffer, BUFFER_SIZE);
+		if (r_bytes == -1)
+		{
+			close(fd_from);
+			close(fd_to);
+			print_error(98, "Error: Can't read from file %s\n", av[1]);
 		}
 	}
 
@@ -72,6 +80,7 @@ int main(int ac, char **av)
 		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd_from);
 		exit(100);
 	}
+
 	if (close(fd_to) == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd_to);
