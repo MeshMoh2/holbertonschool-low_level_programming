@@ -7,11 +7,11 @@
 #define BUF_SIZE 1024
 
 /**
- * main - Copies the content of one file to another.
- * @ac: Argument count.
- * @av: Argument vector.
+ * main - Copies the content of a file to another file
+ * @ac: Argument count
+ * @av: Argument vector
  *
- * Return: 0 on success. Exits with codes on failure.
+ * Return: 0 on success, exits with error code on failure
  */
 int main(int ac, char **av)
 {
@@ -64,7 +64,6 @@ int main(int ac, char **av)
 		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd_from);
 		exit(100);
 	}
-
 	if (close(fd_to) == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd_to);
